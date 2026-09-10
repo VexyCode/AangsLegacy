@@ -1,0 +1,8 @@
+name: Aangs Legacy
+version: '${version}'
+
+main: net.kylanic.aangslegacy.AangsLegacy
+api-version: '26.2'
+load: POSTWORLD
+
+authors: [ Vexor, Kylanic Studios ]

@@ -1,4 +1,4 @@
-name: Aangs Legacy
+name: AangsLegacy
 version: '${version}'
 
 main: net.kylanic.aangslegacy.AangsLegacy
@@ -6,3 +6,8 @@ api-version: '26.2'
 load: POSTWORLD
 
 authors: [ Vexor, Kylanic Studios ]
+
+commands:
+  who:
+    description: Shows the bender information about a player
+    usage: /who <player>

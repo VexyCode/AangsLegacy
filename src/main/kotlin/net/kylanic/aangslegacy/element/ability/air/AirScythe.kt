@@ -7,6 +7,6 @@ class AirScythe : AirAbility() {
     override val name: String
         get() = "${element.toColorCode()}Air Scythe§r"
 
-    override val cooldownTicks: Int?
+    override val cooldownTicks: Int
         get() = 5 // 0.25 sec cooldown
 }

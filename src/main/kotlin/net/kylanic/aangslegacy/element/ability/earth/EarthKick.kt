@@ -7,6 +7,6 @@ class EarthKick : EarthAbility() {
     override val name: String
         get() = "${element.toColorCode()}Earth Kick§r"
 
-    override val cooldownTicks: Int?
+    override val cooldownTicks: Int
         get() = 20 // 1 sec cooldown
 }

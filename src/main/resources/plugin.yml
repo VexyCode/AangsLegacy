@@ -11,3 +11,7 @@ commands:
   who:
     description: Shows the bender information about a player
     usage: /who <player>
+
+  ability:
+    description: Assigns abilities to slots or empties them.
+    usage: /ability <slot> <move>

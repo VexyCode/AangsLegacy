@@ -1,8 +1,7 @@
-package net.kylanic.aangslegacy.element.ability.instance.earth
+package net.kylanic.aangslegacy.element.abilityinstance.earth
 
-import net.kylanic.aangslegacy.AangsLegacy
-import net.kylanic.aangslegacy.element.ability.instance.AbilityInstance
-import net.kylanic.aangslegacy.element.ability.instance.ShiftAbility
+import net.kylanic.aangslegacy.element.abilityinstance.AbilityInstance
+import net.kylanic.aangslegacy.element.abilityinstance.ShiftAbility
 import net.kylanic.aangslegacy.event.Event
 import net.kylanic.aangslegacy.event.EventType
 import net.kylanic.aangslegacy.util.ConfigLoader

@@ -9,7 +9,7 @@ import org.bukkit.command.TabCompleter
 import org.bukkit.entity.Player
 import org.bukkit.util.StringUtil
 
-class SetMoveToSlot : CommandExecutor, TabCompleter {
+class AbilityCommand : CommandExecutor, TabCompleter {
     override fun onCommand(
         sender: CommandSender,
         command: Command,
@@ -22,7 +22,8 @@ class SetMoveToSlot : CommandExecutor, TabCompleter {
             return true
         }
 
-        var moveIds = AbilityRegistry.getAllIds()
+        var moveIds = AbilityRegistry.getAllIds().toMutableList()
+        moveIds.add("empty")
 
         var slot = args[0].toIntOrNull()
         if (slot == null) {
@@ -55,13 +56,20 @@ class SetMoveToSlot : CommandExecutor, TabCompleter {
         }
 
         val ability = AbilityRegistry.getAbilityDefinition(id)
-        if (ability == null) {
+        if (ability == null && id != "empty") {
             sender.sendMessage("Couldn't find ability in registry, somehow...")
             return true
         }
 
-        bender.abilityManager.setAbilitySlot(slot, ability)
-        sender.sendMessage("Set slot $slot to ${ability.name}")
+        if (id == "empty") {
+            bender.abilityManager.setAbilitySlot(slot, null)
+            sender.sendMessage("Emptied slot $slot")
+        } else {
+            bender.abilityManager.setAbilitySlot(slot, ability)
+            sender.sendMessage("Set slot $slot to ${ability?.name}")
+        }
+
+
         return true
     }
 

@@ -1,15 +1,14 @@
 package net.kylanic.aangslegacy.element.ability
 
-import net.kylanic.aangslegacy.AangsLegacy
 import net.kylanic.aangslegacy.element.ability.air.AirScythe
 import net.kylanic.aangslegacy.element.ability.earth.EarthKick
 import net.kylanic.aangslegacy.element.ability.fire.Fireball
-import net.kylanic.aangslegacy.element.ability.instance.AbilityInstance
-import net.kylanic.aangslegacy.element.ability.instance.ShiftAbility
-import net.kylanic.aangslegacy.element.ability.instance.air.AirScytheInstance
-import net.kylanic.aangslegacy.element.ability.instance.earth.EarthKickInstance
-import net.kylanic.aangslegacy.element.ability.instance.fire.FireballInstance
-import net.kylanic.aangslegacy.element.ability.instance.water.WaterSplashInstance
+import net.kylanic.aangslegacy.element.abilityinstance.AbilityInstance
+import net.kylanic.aangslegacy.element.abilityinstance.ShiftAbility
+import net.kylanic.aangslegacy.element.abilityinstance.air.AirScytheInstance
+import net.kylanic.aangslegacy.element.abilityinstance.earth.EarthKickInstance
+import net.kylanic.aangslegacy.element.abilityinstance.fire.FireballInstance
+import net.kylanic.aangslegacy.element.abilityinstance.water.WaterSplashInstance
 import net.kylanic.aangslegacy.element.ability.water.WaterSplash
 import net.kylanic.aangslegacy.util.AbilityRegistryEntry
 import org.bukkit.entity.Player

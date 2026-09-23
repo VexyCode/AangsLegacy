@@ -1,4 +1,4 @@
-package net.kylanic.aangslegacy.element.ability.instance
+package net.kylanic.aangslegacy.element.abilityinstance
 
 import net.kylanic.aangslegacy.AangsLegacy
 import net.kylanic.aangslegacy.element.ability.AbilityRegistry

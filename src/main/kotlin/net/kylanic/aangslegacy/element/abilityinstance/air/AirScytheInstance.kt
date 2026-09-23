@@ -1,8 +1,8 @@
-package net.kylanic.aangslegacy.element.ability.instance.air
+package net.kylanic.aangslegacy.element.abilityinstance.air
 
 import net.kylanic.aangslegacy.AangsLegacy
-import net.kylanic.aangslegacy.element.ability.instance.AbilityInstance
-import net.kylanic.aangslegacy.element.ability.instance.ShiftAbility
+import net.kylanic.aangslegacy.element.abilityinstance.AbilityInstance
+import net.kylanic.aangslegacy.element.abilityinstance.ShiftAbility
 import net.kylanic.aangslegacy.event.Event
 import net.kylanic.aangslegacy.event.EventType
 import org.bukkit.Particle

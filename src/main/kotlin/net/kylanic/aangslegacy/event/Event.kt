@@ -1,3 +1,8 @@
 package net.kylanic.aangslegacy.event
 
-data class Event()
+import org.bukkit.entity.Player
+
+data class Event(
+    val type: EventType,
+    val player: Player,
+)

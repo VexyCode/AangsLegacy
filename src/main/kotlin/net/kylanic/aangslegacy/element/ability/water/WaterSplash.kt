@@ -7,6 +7,6 @@ class WaterSplash : WaterAbility() {
     override val name: String
         get() = "${element.toColorCode()}Water Splash§r"
 
-    override val cooldownTicks: Int?
+    override val cooldownTicks: Int
         get() = 4 * 20  // 4 seconds on a normal tps.
 }

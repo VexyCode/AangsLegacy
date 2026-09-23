@@ -1,8 +1,10 @@
-package net.kylanic.aangslegacy.player
+package net.kylanic.aangslegacy.bender
 
 import net.kylanic.aangslegacy.AangsLegacy
 import net.kylanic.aangslegacy.element.Element
+import net.kylanic.aangslegacy.event.Event
 import net.kyori.adventure.text.Component
+import org.bukkit.Bukkit
 import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.entity.Player
 import java.io.File
@@ -36,6 +38,7 @@ object BenderManager {
         }
 
         val bender: Bender = Bender(id, element)
+        bender.onInit(player)
         this.benders[id] = bender
 
         AangsLegacy.logger.info("Created bender for ID '$id' with element $element.")
@@ -85,7 +88,9 @@ object BenderManager {
                 }
             }
 
-            benders[uuid] = Bender(uuid, element!!)
+            val b = Bender(uuid, element!!)
+
+            benders[uuid] = b
         }
     }
 
@@ -94,5 +99,23 @@ object BenderManager {
     fun get(player: Player): Bender? {
         val id = player.uniqueId
         return benders[id]
+    }
+
+    fun handleEvent(event: Event) {
+        val bender = benders[event.player.uniqueId] ?: return
+
+        bender.abilityManager.handleEvent(event)
+    }
+
+    fun tickCooldowns() {
+        for ((id, bender) in benders) {
+            val player = Bukkit.getPlayer(id) ?: continue
+            bender.tickCooldowns()
+        }
+    }
+
+    fun resetCooldown(player: Player, abilityId: String) {
+        val bender = get(player) ?: return
+        bender.resetCooldown(abilityId)
     }
 }

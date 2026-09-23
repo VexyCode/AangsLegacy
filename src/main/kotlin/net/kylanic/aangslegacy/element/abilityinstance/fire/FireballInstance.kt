@@ -1,8 +1,8 @@
-package net.kylanic.aangslegacy.element.ability.instance.fire
+package net.kylanic.aangslegacy.element.abilityinstance.fire
 
-import net.kylanic.aangslegacy.element.ability.instance.ArmSwingAbility
-import net.kylanic.aangslegacy.element.ability.instance.AbilityInstance
-import net.kylanic.aangslegacy.element.ability.instance.KhaleAbilityInstance
+import net.kylanic.aangslegacy.element.abilityinstance.ArmSwingAbility
+import net.kylanic.aangslegacy.element.abilityinstance.AbilityInstance
+import net.kylanic.aangslegacy.element.abilityinstance.KhaleAbilityInstance
 import net.kylanic.aangslegacy.event.Event
 import net.kylanic.aangslegacy.event.EventType
 import net.kylanic.aangslegacy.util.BiomeUtils

@@ -7,6 +7,6 @@ class Fireball : FireAbility() {
     override val name: String
         get() = "${element.toColorCode()}Fireball§r"
 
-    override val cooldownTicks: Int?
+    override val cooldownTicks: Int
         get() = 5  // 0.25 sec cooldown
 }

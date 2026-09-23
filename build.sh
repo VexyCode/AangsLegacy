@@ -1,0 +1,1 @@
+mvn clean package && mv target/aangs-legacy-*-beta.jar /home/Vexor/.cache/JetBrains/IntelliJIdea2026.2/com.nickawrist.MinecraftDevServer/al_test/plugins/aangs-legacy-beta.jar

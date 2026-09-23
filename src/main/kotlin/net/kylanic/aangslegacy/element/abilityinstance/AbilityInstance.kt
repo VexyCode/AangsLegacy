@@ -1,4 +1,4 @@
-package net.kylanic.aangslegacy.element.ability.instance
+package net.kylanic.aangslegacy.element.abilityinstance
 
 import net.kylanic.aangslegacy.bender.BenderManager
 import net.kylanic.aangslegacy.event.Event
@@ -13,6 +13,7 @@ abstract class AbilityInstance(
     fun start() {
         if (isActive) return
         isActive = true
+
         onStart()
     }
 

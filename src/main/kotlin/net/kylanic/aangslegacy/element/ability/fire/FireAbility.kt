@@ -1,4 +1,9 @@
 package net.kylanic.aangslegacy.element.ability.fire
 
-class FireAbility {
+import net.kylanic.aangslegacy.element.Element
+import net.kylanic.aangslegacy.element.ability.Ability
+
+abstract class FireAbility : Ability() {
+    override val element: Element
+        get() = Element.Fire
 }

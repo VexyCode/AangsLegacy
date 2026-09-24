@@ -16,6 +16,7 @@ object BenderManager {
 
     fun createPlayer(player: Player) {
         val id = player.uniqueId
+
         if (this.has(id)) {
             AangsLegacy.logger.info("ID '$id' already tied to a bender.")
             return
@@ -24,6 +25,7 @@ object BenderManager {
         val seed = id.mostSignificantBits xor
                 id.leastSignificantBits xor
                 System.currentTimeMillis()
+
         val random = Random(seed)
 
         val element: Element = when (val x = random.nextInt(0, 4)) {
@@ -32,33 +34,51 @@ object BenderManager {
             2 -> Element.Water
             3 -> Element.Earth
             else -> {
-                AangsLegacy.logger.info("Unable to select an element for '${id}' (random number: $x) defaulting to fire")
+                AangsLegacy.logger.info(
+                    "Unable to select an element for '$id' " +
+                            "(random number: $x) defaulting to fire"
+                )
                 Element.Fire
             }
         }
 
-        val bender: Bender = Bender(id, element)
-        bender.onInit(player)
-        this.benders[id] = bender
+        val bender = Bender(
+            id,
+            element,
+            mutableListOf(),
+            MutableList(9) { null }
+        )
 
-        AangsLegacy.logger.info("Created bender for ID '$id' with element $element.")
-        player.sendMessage(Component.text("${element.toColorCode()}Hello, ${player.name}! Welcome to the server! You are a/an ${element}bender. Good luck!"))
+        benders[id] = bender
+
+        AangsLegacy.logger.info(
+            "Created bender for ID '$id' with element $element."
+        )
+
+        player.sendMessage(
+            Component.text(
+                "${element.toColorCode()}Hello, ${player.name}! " +
+                        "Welcome to the server! You are a/an ${element}bender. Good luck!"
+            )
+        )
     }
 
-    fun has(id: UUID): Boolean = id in this.benders
+    fun has(id: UUID): Boolean = id in benders
 
     fun save() {
         AangsLegacy.logger.info("Saving players...")
 
         val file = File(AangsLegacy.dataFolder, "players.yml")
 
-        if (!file.exists()) file.createNewFile()
+        if (!file.exists()) {
+            file.createNewFile()
+        }
 
         val players = YamlConfiguration.loadConfiguration(file)
 
-        for ((id, b) in benders) {
-            AangsLegacy.logger.info("\tSaving player '${id}'")
-            b.save(players)
+        for ((id, bender) in benders) {
+            AangsLegacy.logger.info("\tSaving player '$id'")
+            bender.save(players)
         }
 
         players.save(file)
@@ -66,39 +86,68 @@ object BenderManager {
 
     fun load() {
         AangsLegacy.logger.info("Loading players!")
+
         val file = File(AangsLegacy.dataFolder, "players.yml")
+
         if (!file.exists()) {
-            AangsLegacy.logger.warning("\tNo players.yml file found. Will create when saving.")
+            AangsLegacy.logger.warning(
+                "\tNo players.yml file found. Will create when saving."
+            )
             return
         }
 
         val players = YamlConfiguration.loadConfiguration(file)
 
         for (id in players.getKeys(false)) {
-            val uuid = UUID.fromString(id)
+            val uuid = try {
+                UUID.fromString(id)
+            } catch (_: IllegalArgumentException) {
+                AangsLegacy.logger.warning(
+                    "\tInvalid player UUID '$id'. Skipping."
+                )
+                continue
+            }
+
             val elementString = players.getString("$id.element")
-            var element: Element? = null
-            if (elementString == null) {
-                AangsLegacy.logger.warning("\tPlayer id '$id' does not have an element attached. Defaulting to Fire.")
+
+            val element = if (elementString == null) {
+                AangsLegacy.logger.warning(
+                    "\tPlayer id '$id' does not have an element attached. " +
+                            "Defaulting to Fire."
+                )
+                Element.Fire
             } else {
-                element = Element.fromString(elementString)
-                if (element == null) {
-                    AangsLegacy.logger.warning("\tUnknown element '$elementString'. Defaulting to Fire.")
-                    element = Element.Fire
+                Element.fromString(elementString) ?: run {
+                    AangsLegacy.logger.warning(
+                        "\tUnknown element '$elementString'. Defaulting to Fire."
+                    )
+                    Element.Fire
                 }
             }
 
-            val b = Bender(uuid, element!!)
+            val abilityIds = MutableList<String?>(9) { slot ->
+                players.getString("$id.abilities.$slot")
+            }
 
-            benders[uuid] = b
+            val bender = Bender(
+                uuid,
+                element,
+                mutableListOf(),
+                abilityIds
+            )
+
+            benders[uuid] = bender
+
+            AangsLegacy.logger.info(
+                "\tLoaded player '$uuid' with element $element."
+            )
         }
     }
 
     fun get(id: UUID): Bender? = benders[id]
 
     fun get(player: Player): Bender? {
-        val id = player.uniqueId
-        return benders[id]
+        return benders[player.uniqueId]
     }
 
     fun handleEvent(event: Event) {
@@ -109,7 +158,7 @@ object BenderManager {
 
     fun tickCooldowns() {
         for ((id, bender) in benders) {
-            val player = Bukkit.getPlayer(id) ?: continue
+            Bukkit.getPlayer(id) ?: continue
             bender.tickCooldowns()
         }
     }

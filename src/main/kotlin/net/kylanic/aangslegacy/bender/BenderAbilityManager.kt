@@ -135,4 +135,14 @@ class BenderAbilityManager(
 
         summonAbilityInstance()?.handleEvent(event)
     }
+
+    fun getAbilityIds(): List<String> {
+        val ids: MutableList<String> = mutableListOf()
+
+        for (a in equippedAbilities) {
+            ids.add(a?.id ?: "null")
+        }
+
+        return ids
+    }
 }

@@ -16,31 +16,9 @@ class AbilityCommand : CommandExecutor, TabCompleter {
         label: String,
         args: Array<out String>
     ): Boolean {
-        // /ability <slot> <move>
-        if (args.size < 2) {
-            sender.sendMessage("§cUsage: /ability <slot: number> <move>.")
-            return true
-        }
-
-        var moveIds = AbilityRegistry.getAllIds().toMutableList()
-        moveIds.add("empty")
-
-        var slot = args[0].toIntOrNull()
-        if (slot == null) {
-            sender.sendMessage("§cSlot must be a number, not ${args[0]}.")
-            return true
-        }
-
-        if (slot !in 1..9) {
-            sender.sendMessage("§cSlot must be a number between 1 and 9.")
-            return true
-        }
-
-        slot -= 1
-
-        val id: String = args[1]
-        if (id !in moveIds) {
-            sender.sendMessage("§cUnknown move id: $id, might be the wrong version, check the github page.")
+        // /ability [slot: number] <move>
+        if (args.isEmpty()) {
+            sender.sendMessage("§cUsage: /ability [slot: number] <move>.")
             return true
         }
 
@@ -52,6 +30,44 @@ class AbilityCommand : CommandExecutor, TabCompleter {
         val bender = BenderManager.get(sender)
         if (bender == null) {
             sender.sendMessage("Player ${sender.name} is not a bender, somehow...")
+            return true
+        }
+
+        val moveIds = AbilityRegistry.getIdsForElements(bender.unlockedElements).toMutableList()
+        moveIds.add("empty")
+
+        val slot: Int
+        val rawId: String
+
+        if (args.size == 1) {
+            slot = sender.inventory.heldItemSlot
+            rawId = args[0]
+        } else {
+            val parsedSlot = args[0].toIntOrNull()
+            if (parsedSlot == null) {
+                sender.sendMessage("§cSlot must be a number, not ${args[0]}.")
+                return true
+            }
+
+            if (parsedSlot !in 1..9) {
+                sender.sendMessage("§cSlot must be a number between 1 and 9.")
+                return true
+            }
+
+            slot = parsedSlot - 1
+            rawId = args[1]
+        }
+
+        var id = rawId
+        if (id !in moveIds && !id.startsWith("al:")) {
+            val prefixed = "al:$id"
+            if (prefixed in moveIds) {
+                id = prefixed
+            }
+        }
+
+        if (id !in moveIds) {
+            sender.sendMessage("§cUnknown move id: $rawId, might be the wrong version, check the github page.")
             return true
         }
 
@@ -69,7 +85,6 @@ class AbilityCommand : CommandExecutor, TabCompleter {
             sender.sendMessage("Set slot $slot to ${ability?.name}")
         }
 
-
         return true
     }
 
@@ -79,23 +94,29 @@ class AbilityCommand : CommandExecutor, TabCompleter {
         label: String,
         args: Array<out String>
     ): List<String?>? {
+        if (sender !is Player) return emptyList()
+        val bender = BenderManager.get(sender) ?: return emptyList()
+
+        val availableAbilityIds: List<String> = AbilityRegistry.getIdsForElements(bender.unlockedElements)
+        val strippedIds = availableAbilityIds.map { it.removePrefix("al:") }
+
         if (args.size == 1) {
             val nums = listOf("1", "2", "3", "4", "5", "6", "7", "8", "9")
+            val options = (nums + availableAbilityIds + strippedIds + listOf("empty")).distinct()
             val matches = mutableListOf<String>()
-            StringUtil.copyPartialMatches(args[0], nums, matches)
+            StringUtil.copyPartialMatches(args[0], options, matches)
             matches.sort()
             return matches
         }
 
         if (args.size == 2) {
-            var moveIds = AbilityRegistry.getAllIds()
+            val options = (availableAbilityIds + strippedIds + listOf("empty")).distinct()
             val matches = mutableListOf<String>()
-            StringUtil.copyPartialMatches(args[1], moveIds, matches)
+            StringUtil.copyPartialMatches(args[1], options, matches)
             matches.sort()
             return matches
         }
 
         return emptyList()
     }
-
 }

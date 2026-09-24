@@ -1,5 +1,6 @@
 package net.kylanic.aangslegacy.element.ability
 
+import net.kylanic.aangslegacy.element.Element
 import net.kylanic.aangslegacy.element.ability.air.AirScythe
 import net.kylanic.aangslegacy.element.ability.earth.EarthKick
 import net.kylanic.aangslegacy.element.ability.fire.Fireball
@@ -46,5 +47,29 @@ object AbilityRegistry {
     fun isShiftAbility(id: String, player: Player): Boolean {
         val throwaway = createInstance(id, player) ?: return false
         return throwaway is ShiftAbility
+    }
+
+    fun getForElement(element: Element): List<Ability> {
+        val abilities = mutableListOf<Ability>()
+        for ((_, entry) in registry) abilities.add(entry.ability)
+
+        return abilities.filter { it.element == element }
+    }
+
+    fun getIdsForElement(element: Element): List<String> {
+        val ids = mutableListOf<String>()
+        val abilities = getForElement(element)
+
+        for (ab in abilities) ids.add(ab.id)
+
+        return ids
+    }
+
+    fun getIdsForElements(elements: List<Element>): List<String> {
+        val ids = mutableListOf<String>()
+
+        for (element in elements) ids.addAll(getIdsForElement(element))
+
+        return ids
     }
 }

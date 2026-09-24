@@ -60,7 +60,7 @@ class FireballInstance(
     override fun onEvent(event: Event) {
         if (event.type == EventType.ArmSwing) {
             start()
-        }
+        } else return
     }
 
     override fun onStart() {

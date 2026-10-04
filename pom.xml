@@ -6,7 +6,7 @@
 
     <groupId>net.kylanic</groupId>
     <artifactId>aangs-legacy</artifactId>
-    <version>0.1-beta</version>
+    <version>0.1-beta.1</version>
     <packaging>jar</packaging>
 
     <name>aangs-legacy</name>
@@ -55,7 +55,18 @@
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+                <includes>
+                    <include>**/*</include>
+                </includes>
+            </resource>
+
+            <resource>
+                <directory>src/main/resources</directory>
                 <filtering>true</filtering>
+                <includes>
+                    <include>paper-plugin.yml</include>
+                </includes>
             </resource>
         </resources>
     </build>

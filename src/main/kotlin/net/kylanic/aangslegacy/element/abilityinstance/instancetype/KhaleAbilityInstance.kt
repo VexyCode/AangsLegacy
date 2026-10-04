@@ -1,0 +1,3 @@
+package net.kylanic.aangslegacy.element.abilityinstance.instancetype
+
+interface KhaleAbilityInstance

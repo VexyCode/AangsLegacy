@@ -1,10 +1,10 @@
 package net.kylanic.aangslegacy.element.abilityinstance.earth
 
 import net.kylanic.aangslegacy.element.abilityinstance.AbilityInstance
-import net.kylanic.aangslegacy.element.abilityinstance.ShiftAbility
+import net.kylanic.aangslegacy.element.abilityinstance.instancetype.ShiftAbility
 import net.kylanic.aangslegacy.event.Event
 import net.kylanic.aangslegacy.event.EventType
-import net.kylanic.aangslegacy.util.ConfigLoader
+import net.kylanic.aangslegacy.config.Config
 import net.kyori.adventure.text.Component
 import org.bukkit.FluidCollisionMode
 import org.bukkit.Location
@@ -69,7 +69,7 @@ class EarthKickInstance(
     override fun onStart() {}
 
     private fun selectAndSpawnBlock() {
-        val earthbendable = ConfigLoader.getEarthbendableBlocks()
+        val earthbendable = Config.getEarthbendableBlocks()
 
         val hit = owner.world.rayTraceBlocks(
             owner.eyeLocation,

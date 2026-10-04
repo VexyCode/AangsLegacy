@@ -2,6 +2,7 @@ package net.kylanic.aangslegacy.element.abilityinstance
 
 import net.kylanic.aangslegacy.AangsLegacy
 import net.kylanic.aangslegacy.element.ability.AbilityRegistry
+import net.kylanic.aangslegacy.element.abilityinstance.instancetype.KhaleAbilityInstance
 import net.kylanic.aangslegacy.event.Event
 import org.bukkit.entity.Player
 
@@ -9,11 +10,9 @@ object InstanceManager {
     val instancedAbilities: MutableList<AbilityInstance> = mutableListOf()
 
     fun summonAbilityInstance(id: String, owner: Player): AbilityInstance? {
-
         val abilityInstance = AbilityRegistry.createInstance(id, owner) ?: return null
 
         instancedAbilities.add(abilityInstance)
-        abilityInstance.start()
         return abilityInstance
     }
 

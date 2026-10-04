@@ -15,7 +15,7 @@ class LoginListener : Listener {
         val player = event.player
         val id = player.uniqueId
 
-        val file = File(AangsLegacy.dataFolder, "${id}.yml")
+        val file = File(AangsLegacy.dataFolder, "players/${id}.yml")
 
         if (!file.exists()) {
             file.createNewFile()

@@ -3,6 +3,7 @@ package net.kylanic.aangslegacy.bender
 import net.kylanic.aangslegacy.AangsLegacy
 import net.kylanic.aangslegacy.element.Element
 import net.kylanic.aangslegacy.element.ability.AbilityRegistry
+import net.kylanic.aangslegacy.element.progression.AbilityProgression
 import net.kyori.adventure.text.Component
 import org.bukkit.Location
 import org.bukkit.Material
@@ -32,6 +33,9 @@ class Bender(
         Element.Water to 0,
         Element.Earth to 0
     )
+
+    /** This player's XP / level for every ability. */
+    val progression = AbilityProgression()
 
     val usedTemples = mutableListOf<Location>()
 
@@ -67,7 +71,7 @@ class Bender(
     }
 
     fun onInit(player: Player, attunement: Map<Element, Int>? = null) {
-        abilityManager = BenderAbilityManager(player)
+        abilityManager = BenderAbilityManager(player, progression)
 
         for ((slot, abilityId) in abilityIds.withIndex()) {
             if (abilityId == null) continue
@@ -121,44 +125,46 @@ class Bender(
             "used_temple_locations",
             usedTemples
         )
+
+        progression.save(players)
     }
 
-    fun loadAbilities(players: YamlConfiguration, player: Player) {
-        abilityManager = BenderAbilityManager(player)
-
-        for (slot in 0..8) {
-            val abilityId = players.getString("${id}.abilities.$slot")
-
-            if (abilityId == null || abilityId == "null") {
-                abilityManager.setAbilitySlot(slot, null)
-                continue
-            }
-
-            val ability = AbilityRegistry.getAbilityDefinition(abilityId)
-
-            if (ability == null) {
-                AangsLegacy.logger.warning(
-                    "Unknown ability '$abilityId' for player '$id' in slot $slot."
-                )
-                continue
-            }
-
-            abilityManager.setAbilitySlot(slot, ability)
-        }
-
-        abilityManager.setSelectedSlot(player.inventory.heldItemSlot)
-
-        if (unlockedElements.isEmpty())
-            unlockedElements.add(nativeElement)
-    }
+//    fun loadAbilities(players: YamlConfiguration, player: Player) {
+//        abilityManager = BenderAbilityManager(player)
+//
+//        for (slot in 0..8) {
+//            val abilityId = players.getString("${id}.abilities.$slot")
+//
+//            if (abilityId == null || abilityId == "null") {
+//                abilityManager.setAbilitySlot(slot, null)
+//                continue
+//            }
+//
+//            val ability = AbilityRegistry.getAbilityDefinition(abilityId)
+//
+//            if (ability == null) {
+//                AangsLegacy.logger.warning(
+//                    "Unknown ability '$abilityId' for player '$id' in slot $slot."
+//                )
+//                continue
+//            }
+//
+//            abilityManager.setAbilitySlot(slot, ability)
+//        }
+//
+//        abilityManager.setSelectedSlot(player.inventory.heldItemSlot)
+//
+//        if (unlockedElements.isEmpty())
+//            unlockedElements.add(nativeElement)
+//    }
 
     fun tickCooldowns() {
         abilityManager.tickCooldowns()
     }
 
-    fun resetCooldown(abilityId: String) {
-        abilityManager.resetAbilityCooldown(abilityId)
-    }
+//    fun resetCooldown(abilityId: String) {
+//        abilityManager.resetAbilityCooldown(abilityId)
+//    }
 
     fun increaseAttunement(element: Element, player: Player) {
         if (element in unlockedElements) return
@@ -170,7 +176,6 @@ class Bender(
         val attunement = current + 1
         elementAttunement[element] = attunement
 
-        // Small feedback for every attunement increase.
         playAttunementEffect(player, element, attunement)
 
         if (attunement < 3) {
@@ -280,7 +285,6 @@ class Bender(
     ) {
         val center = player.location.clone().add(0.0, 1.0, 0.0)
 
-        // Expanding rings.
         for (ring in 0..2) {
             val radius = 0.6 + ring * 0.45
 
@@ -303,7 +307,6 @@ class Bender(
             }
         }
 
-        // Vertical burst.
         spawnElementParticles(
             player,
             element,

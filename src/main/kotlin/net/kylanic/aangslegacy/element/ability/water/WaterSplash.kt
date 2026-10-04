@@ -1,6 +1,8 @@
 package net.kylanic.aangslegacy.element.ability.water
 
-class WaterSplash : WaterAbility() {
+import net.kylanic.aangslegacy.element.ability.ProgressingAbility
+
+class WaterSplash(override val xpPerHit: Int = 8) : WaterAbility(), ProgressingAbility {
     override val id: String
         get() = "al:water_splash"
 

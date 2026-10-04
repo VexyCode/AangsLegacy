@@ -23,6 +23,8 @@ import org.bukkit.util.Vector
 class FireballInstance(
     override val owner: Player,
 ) : AbilityInstance("al:fireball", owner), KhaleAbilityInstance, ArmSwingAbility {
+    private val castLevel = level
+
     private lateinit var direction: Vector
     private lateinit var location: Vector
     private lateinit var previousLocation: Vector
@@ -36,7 +38,7 @@ class FireballInstance(
 
     private var lifeTimeTicks: Int = 1200
 
-    private val damage = 3.0
+    private val damage = 3.0 * castLevel.powerMultiplier
     private val explosionPower = 0.6f
     private val knockbackStrength = 0.35
 
@@ -114,6 +116,7 @@ class FireballInstance(
         hitEntity?.let { entity ->
             if (entity is Damageable) {
                 entity.damage(damage, owner)
+                awardXp()
             }
             val push = direction.clone().multiply(knockbackStrength).setY(0.15)
             entity.velocity = entity.velocity.clone().add(push)

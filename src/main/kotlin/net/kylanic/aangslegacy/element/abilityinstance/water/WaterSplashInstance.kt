@@ -18,12 +18,14 @@ import org.bukkit.util.Vector
 class WaterSplashInstance(
     override val owner: Player,
 ) : AbilityInstance("al:water_splash", owner), ArmSwingAbility {
+    private val castLevel = level
+
     private val range: Int = 3
     private val speed: Double = 1.1
     private val gravity: Double = 0.045
     private val maxTravel: Double = 20.0
     private val splashRadius: Double = 3.25
-    private val damage: Double = 4.0
+    private val damage: Double = 4.0 * castLevel.powerMultiplier
     private val knockbackStrength: Double = 1.15
     private val soakedSlowTicks: Int = 40
     private val puddleLifeTicks: Int = 25
@@ -200,7 +202,7 @@ class WaterSplashInstance(
         }
     }
 
-   private fun splash(hitPoint: org.bukkit.Location) {
+    private fun splash(hitPoint: org.bukkit.Location) {
         val world = hitPoint.world ?: owner.world
         clearTrail()
 
@@ -226,6 +228,7 @@ class WaterSplashInstance(
             horizontal.normalize().multiply(knockbackStrength)
 
             entity.damage(damage, owner)
+            awardXp()
             entity.velocity = entity.velocity.clone().add(horizontal).setY(0.35)
 
             if (frozen) {
@@ -271,7 +274,7 @@ class WaterSplashInstance(
         tempBlocks.add(TempBlock(pos.clone(), revertAtTick))
     }
 
-   private fun advanceTrail() {
+    private fun advanceTrail() {
         val world = owner.world
 
         val headBlock = world.getBlockAt(location.toLocation(world))

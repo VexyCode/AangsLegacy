@@ -103,6 +103,8 @@ object Config {
             }
         }
 
+        bender.progression.load(player)
+
         val usedTemples = player.getList("used_temple_locations")
 
         if (usedTemples != null) {

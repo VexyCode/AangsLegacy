@@ -1,9 +1,7 @@
 package net.kylanic.aangslegacy
 
 import net.kylanic.aangslegacy.bender.BenderManager
-import net.kylanic.aangslegacy.commands.AbilityCommand
 import net.kylanic.aangslegacy.commands.ElementCommand
-import net.kylanic.aangslegacy.commands.WhoCommand
 import net.kylanic.aangslegacy.config.Config
 import net.kylanic.aangslegacy.element.abilityinstance.InstanceManager
 import net.kylanic.aangslegacy.event.EventManager
@@ -56,11 +54,7 @@ class AangsLegacy : JavaPlugin() {
 
         BenderManager.load()
 
-        registerCommands(
-            "who" to WhoCommand(),
-            "ability" to AbilityCommand(),
-            "element" to ElementCommand(),
-        )
+        registerCommand("aangslegacy", ElementCommand(), "aang", "al")
 
         registerSchedulerFunctions(
 
@@ -95,17 +89,22 @@ class AangsLegacy : JavaPlugin() {
         }
     }
 
-    fun registerCommands(vararg commands: Pair<String, CommandExecutor>) {
-        for ((id, executor) in commands) {
-            val cmd = object : Command(id) {
-                override fun execute(sender: CommandSender, label: String, args: Array<out String>): Boolean =
-                    executor.onCommand(sender, this, label, arrayOf(*args))
+    fun registerCommand(
+        name: String,
+        executor: CommandExecutor,
+        vararg aliases: String
+    ) {
+        val cmd = object : Command(name) {
+            override fun execute(sender: CommandSender, label: String, args: Array<out String>): Boolean =
+                executor.onCommand(sender, this, label, arrayOf(*args))
 
-                override fun tabComplete(sender: CommandSender, alias: String, args: Array<out String>): List<String> =
-                    (executor as? TabCompleter)?.onTabComplete(sender, this, alias, arrayOf(*args)) ?: emptyList()
-            }
-            server.commandMap.register("aangslegacy", cmd)
+            override fun tabComplete(sender: CommandSender, alias: String, args: Array<out String>): List<String> =
+                (executor as? TabCompleter)?.onTabComplete(sender, this, alias, arrayOf(*args)) ?: emptyList()
         }
+
+        cmd.setAliases(aliases.toList())
+
+        server.commandMap.register("aangslegacy", cmd)
     }
 
     fun registerSchedulerFunctions(

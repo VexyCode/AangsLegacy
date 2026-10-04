@@ -113,9 +113,4 @@ object BenderManager {
             bender.tickCooldowns()
         }
     }
-
-    fun resetCooldown(player: Player, abilityId: String) {
-        val bender = get(player) ?: return
-        bender.resetCooldown(abilityId)
-    }
 }

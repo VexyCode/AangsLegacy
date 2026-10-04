@@ -1,6 +1,8 @@
 package net.kylanic.aangslegacy.element.ability.air
 
-class AirScythe : AirAbility() {
+import net.kylanic.aangslegacy.element.ability.ProgressingAbility
+
+class AirScythe(override val xpPerHit: Int = 1) : AirAbility(), ProgressingAbility {
     override val id: String
         get() = "al:air_scythe"
 

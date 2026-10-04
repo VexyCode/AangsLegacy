@@ -23,6 +23,8 @@ class EarthKickInstance(
 ) : AbilityInstance("al:earth_kick", owner), ShiftAbility {
     private enum class Phase { SELECTING, FLOATING, LAUNCHED }
 
+    private val castLevel = level
+
     private var phase = Phase.SELECTING
 
     private var sourceBlockLoc: Location? = null
@@ -32,7 +34,7 @@ class EarthKickInstance(
     private val launchTargetRange = 8.0
     private val floatHeightOffset = 2.0
     private val launchSpeed = 1.6
-    private val damage = 4.0
+    private val damage = 4.0 * castLevel.powerMultiplier
     private val knockbackStrength = 0.4
     private val kickRecoil = 0.25
 
@@ -175,6 +177,7 @@ class EarthKickInstance(
 
                 if (hitEntity != null) {
                     (hitEntity as Damageable).damage(damage, owner)
+                    awardXp()
                     val push = fb.velocity.clone().normalize().multiply(knockbackStrength).setY(0.2)
                     hitEntity.velocity = hitEntity.velocity.clone().add(push)
 

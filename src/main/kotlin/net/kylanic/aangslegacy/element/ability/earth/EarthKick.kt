@@ -1,6 +1,8 @@
 package net.kylanic.aangslegacy.element.ability.earth
 
-class EarthKick : EarthAbility() {
+import net.kylanic.aangslegacy.element.ability.ProgressingAbility
+
+class EarthKick(override val xpPerHit: Int = 5) : EarthAbility(), ProgressingAbility {
     override val id: String
         get() = "al:earth_kick"
 

@@ -1,6 +1,8 @@
 package net.kylanic.aangslegacy.element.ability.fire
 
-class Fireball : FireAbility() {
+import net.kylanic.aangslegacy.element.ability.ProgressingAbility
+
+class Fireball(override val xpPerHit: Int = 1) : FireAbility(), ProgressingAbility {
     override val id: String
         get() = "al:fireball"
 

@@ -18,12 +18,14 @@ class AirScytheInstance(
     override val owner: Player
 ) : AbilityInstance("al:air_scythe", owner), ShiftAbility {
 
+    private val castLevel = level
+
     private var activeTicks = 0
     private val duration = 16
 
     private val maxRange = 4.0
     private val arcAngle = Math.toRadians(50.0)
-    private val damage = 1.5
+    private val damage = 1.5 * castLevel.powerMultiplier
     private val knockbackStrength = 0.5
 
     private val hitEntities = mutableSetOf<Int>()
@@ -147,6 +149,7 @@ class AirScytheInstance(
 
         hitEntities += entity.entityId
         entity.damage(damage, owner)
+        awardXp()
 
         val knockbackDir = entity.location.clone().subtract(owner.location).toVector()
         if (knockbackDir.lengthSquared() > 0.001) {

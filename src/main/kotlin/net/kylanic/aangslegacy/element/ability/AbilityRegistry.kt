@@ -5,7 +5,7 @@ import net.kylanic.aangslegacy.element.ability.air.AirScythe
 import net.kylanic.aangslegacy.element.ability.earth.EarthKick
 import net.kylanic.aangslegacy.element.ability.fire.Fireball
 import net.kylanic.aangslegacy.element.abilityinstance.AbilityInstance
-import net.kylanic.aangslegacy.element.abilityinstance.ShiftAbility
+import net.kylanic.aangslegacy.element.abilityinstance.instancetype.ShiftAbility
 import net.kylanic.aangslegacy.element.abilityinstance.air.AirScytheInstance
 import net.kylanic.aangslegacy.element.abilityinstance.earth.EarthKickInstance
 import net.kylanic.aangslegacy.element.abilityinstance.fire.FireballInstance

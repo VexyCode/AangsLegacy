@@ -1,6 +1,7 @@
 package net.kylanic.aangslegacy.bender
 
 import net.kylanic.aangslegacy.AangsLegacy
+import net.kylanic.aangslegacy.config.Config
 import net.kylanic.aangslegacy.element.Element
 import net.kylanic.aangslegacy.event.Event
 import net.kyori.adventure.text.Component
@@ -8,8 +9,11 @@ import org.bukkit.Bukkit
 import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.entity.Player
 import java.io.File
+import java.nio.file.Files
+import java.nio.file.Files.isRegularFile
 import java.util.UUID
 import kotlin.random.Random
+import kotlin.use
 
 object BenderManager {
     private val benders: MutableMap<UUID, Bender> = mutableMapOf()
@@ -67,81 +71,28 @@ object BenderManager {
 
     fun save() {
         AangsLegacy.logger.info("Saving players...")
-
-        val file = File(AangsLegacy.dataFolder, "players.yml")
-
-        if (!file.exists()) {
-            file.createNewFile()
-        }
-
-        val players = YamlConfiguration.loadConfiguration(file)
-
-        for ((id, bender) in benders) {
-            AangsLegacy.logger.info("\tSaving player '$id'")
-            bender.save(players)
-        }
-
-        players.save(file)
+        for ((_, bender) in benders) Config.saveBender(bender)
     }
 
     fun load() {
         AangsLegacy.logger.info("Loading players!")
 
-        val file = File(AangsLegacy.dataFolder, "players.yml")
+        val playersFolder = File(AangsLegacy.dataFolder, "players")
 
-        if (!file.exists()) {
-            AangsLegacy.logger.warning(
-                "\tNo players.yml file found. Will create when saving."
-            )
-            return
-        }
+        val fileNames = mutableListOf<String>()
 
-        val players = YamlConfiguration.loadConfiguration(file)
+        Files.createDirectories(playersFolder.toPath())
 
-        for (id in players.getKeys(false)) {
-            val uuid = try {
-                UUID.fromString(id)
-            } catch (_: IllegalArgumentException) {
-                AangsLegacy.logger.warning(
-                    "\tInvalid player UUID '$id'. Skipping."
-                )
-                continue
-            }
-
-            val elementString = players.getString("$id.element")
-
-            val element = if (elementString == null) {
-                AangsLegacy.logger.warning(
-                    "\tPlayer id '$id' does not have an element attached. " +
-                            "Defaulting to Fire."
-                )
-                Element.Fire
-            } else {
-                Element.fromString(elementString) ?: run {
-                    AangsLegacy.logger.warning(
-                        "\tUnknown element '$elementString'. Defaulting to Fire."
-                    )
-                    Element.Fire
+        Files.walk(playersFolder.toPath()).use { paths ->
+            paths
+                .filter { isRegularFile(it) }
+                .forEach { path ->
+                    val fileName = path.fileName.toString()
+                    fileNames.add(fileName)
                 }
-            }
-
-            val abilityIds = MutableList<String?>(9) { slot ->
-                players.getString("$id.abilities.$slot")
-            }
-
-            val bender = Bender(
-                uuid,
-                element,
-                mutableListOf(),
-                abilityIds
-            )
-
-            benders[uuid] = bender
-
-            AangsLegacy.logger.info(
-                "\tLoaded player '$uuid' with element $element."
-            )
         }
+
+        benders.putAll(Config.loadBenders(fileNames))
     }
 
     fun get(id: UUID): Bender? = benders[id]

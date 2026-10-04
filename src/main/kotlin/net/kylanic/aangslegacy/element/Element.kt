@@ -13,6 +13,20 @@ enum class Element {
         Earth -> "§a"
     }
 
+    fun getNextInElementCycle(): Element = when (this) {
+        Fire -> Air
+        Air -> Water
+        Water -> Earth
+        Earth -> Fire
+    }
+
+    fun getPreviousElementCycle(): Element = when (this) {
+        Fire -> Earth
+        Air -> Fire
+        Water -> Air
+        Earth -> Water
+    }
+
     companion object {
         fun fromString(string: String): Element? = when (string.lowercase()) {
             "fire" -> Fire

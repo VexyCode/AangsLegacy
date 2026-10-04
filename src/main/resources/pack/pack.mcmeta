@@ -1,0 +1,10 @@
+{
+  "pack": {
+    "description": "Aangs Legacy worldgen",
+    "min_format": [
+      107,
+      1
+    ],
+    "max_format": 107
+  }
+}

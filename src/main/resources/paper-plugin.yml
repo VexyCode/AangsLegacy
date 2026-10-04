@@ -1,0 +1,11 @@
+name: AangsLegacy
+version: '${version}'
+main: net.kylanic.aangslegacy.AangsLegacy
+bootstrapper: net.kylanic.aangslegacy.AangsBootstrap
+api-version: '26.2'
+authors: [ Vexor, Kylanic Studios ]
+
+permissions:
+  bending.command.element.admin:
+    description: Lets you add/remove elements from benders
+    default: op
